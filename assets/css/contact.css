@@ -1,0 +1,27 @@
+ main {
+   background: #f8f9fa;
+   padding-bottom: 60px;
+ }
+
+ #contact-form .form-control {
+   border-radius: 0.6rem;
+   padding: 0.75rem;
+   border: 1px solid #ced4da;
+ }
+
+ #contact-form .btn-primary {
+   padding: 0.75rem 1.25rem;
+   border-radius: 0.6rem;
+   font-weight: 500;
+ }
+
+ .contact-container {
+   background: #ffffff;
+   padding: 2rem;
+   border-radius: 1rem;
+   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+ }
+
+ body {
+   background: #f8f9fa;
+ }

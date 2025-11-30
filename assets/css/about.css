@@ -1,0 +1,90 @@
+main {
+  background: #f8f9fa;
+  padding-top: 72px;
+  padding-bottom: 72px;
+}
+
+.values-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.75rem;
+  box-shadow: 0 0.75rem 1.5rem rgba(16,24,40,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.values-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.values-card h5 {
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 1rem;
+}
+
+.values-card ul li {
+  margin-bottom: 0.8rem;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+}
+
+.values-card ul li i {
+  font-size: 1.05rem;
+  vertical-align: middle;
+}
+
+.values-card ul li i {
+  font-size: 1.05rem;
+  vertical-align: middle;
+}
+
+.values-card hr {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(13,110,253,0.05), rgba(13,110,253,0.12));
+}
+
+.values-card .btn {
+  border-radius: 0.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.intro-card {
+  background: #ffffff;
+  border-radius: 1rem;
+  padding: 1.75rem 1.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(16,24,40,0.06);
+  width: 100%;
+  max-width: 100%;        
+  margin: 0 auto;           
+  text-align: left;
+  box-sizing: border-box;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.intro-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 1rem 1.75rem rgba(0, 0, 0, 0.09);
+}
+
+.intro-card .lead {
+  font-size: 1.125rem;
+  color: #212529;
+  line-height: 1.6;
+}
+
+.img-fluid {
+  width:200px;
+  height:200px;
+  object-fit:cover;
+}
+
+@media (max-width: 767px) {
+  .intro-card { padding: 1.25rem; margin: 0 0.5rem; max-width: 100%; }
+  .values-card { padding: 1.25rem; }
+}

@@ -1,0 +1,42 @@
+main {
+  background: #f8f9fa;
+  padding: clamp(2rem, 4vw, 4rem) 0;
+}
+
+.product-card {
+  border-radius: 1rem;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Image area */
+.product-card .card-img-top {
+  display: block;
+  width: 100%;
+  box-sizing: border-box; /* include padding in size calculations */
+  padding: 0.75rem;
+  background: #f8f9fa; /* separates image from white card */
+  object-fit: contain; /* show full image with padding around it */
+  height: 230px;
+  border-top-left-radius: 0.875rem;
+  border-top-right-radius: 0.875rem;
+}
+
+/* Ensure any img rule inside the card inherits the container sizing */
+.product-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: inherit;
+}
+
+/* Slightly smaller image area on small screens */
+@media (max-width: 576px) {
+  .product-card .card-img-top {
+    height: 180px;
+  }
+}
