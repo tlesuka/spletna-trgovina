@@ -42,9 +42,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    if (!validate()) return;
+    if (!validate()) {
+      // stop submission when invalid
+      e.preventDefault();
+      return;
+    }
 
     // Demo odgovor
     resultBox.innerHTML = `
@@ -53,6 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
 
-    form.reset();
+    // form.reset();
   });
 });

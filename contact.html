@@ -41,33 +41,28 @@
           <div class="col-12">
             <h5 class="mb-3">Pišite nam</h5>
     
-    
             <!-- KONTAKTNI OBRAZEC -->
             <div class="card bg-white p-4 shadow-sm">
-              <form id="contact-form">
+              <form id="contact-form" action="https://httpbin.io/post" method="post" target="_blank">
                 <div class="mb-3">
                   <label class="form-label" for="contact-name">Ime in priimek</label>
-                  <input id="contact-name" type="text" class="form-control" />
+                  <input id="contact-name" name="name" type="text" class="form-control" />
                   <div class="invalid-feedback">Vnesite ime in priimek.</div>
                 </div>
     
-    
                 <div class="mb-3">
                   <label class="form-label" for="contact-email">Email</label>
-                  <input id="contact-email" type="email" class="form-control" />
+                  <input id="contact-email" name="email" type="email" class="form-control" />
                   <div class="invalid-feedback">Vnesite veljaven email naslov.</div>
                 </div>
     
-    
                 <div class="mb-3">
                   <label class="form-label" for="contact-message">Sporočilo</label>
-                  <textarea id="contact-message" class="form-control" rows="4"></textarea>
+                  <textarea id="contact-message" name="message" class="form-control" rows="4"></textarea>
                   <div class="invalid-feedback">Vnesite sporočilo.</div>
                 </div>
     
-    
                 <button type="submit" class="btn btn-primary w-100">Pošlji sporočilo</button>
-    
     
                 <div id="contact-result" class="mt-3"></div>
               </form>
