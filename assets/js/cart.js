@@ -1,4 +1,19 @@
 const CART_KEY = 'cart_items';
+const continueBtn = document.getElementById('continue-to-checkout');
+
+// najprej dobi košarico
+const cart = getCart();
+
+// preveri, če je prazna
+if (!cart || cart.length === 0) {
+  continueBtn.disabled = true;
+  continueBtn.classList.add('disabled');
+} else {
+  continueBtn.disabled = false;
+  continueBtn.classList.remove('disabled');
+}
+
+// ostale funkcije
 
 function getCart() {
   try {

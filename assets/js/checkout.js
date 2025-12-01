@@ -16,6 +16,7 @@ function validateCheckoutForm() {
     if (!input) return;
     input.classList.remove('is-invalid');
   }
+
   function setInvalid(input) {
     if (!input) return;
     input.classList.add('is-invalid');
@@ -44,7 +45,7 @@ function validateCheckoutForm() {
   if (!address.value.trim()) setInvalid(address);
 
   const zipVal = zip.value.trim();
-  const zipRegex = /^[0-9]{4}$/; // 4 številke, lahko prilagodiš
+  const zipRegex = /^[0-9]{4}$/; // 4 številke, po potrebi prilagodiš
   if (!zipVal || !zipRegex.test(zipVal)) setInvalid(zip);
 
   if (!city.value.trim()) setInvalid(city);
@@ -83,7 +84,7 @@ function validateCheckoutForm() {
     }
 
     const cvcVal = cardCvc.value.trim();
-    const cvcRegex = /^[0-9]{3}$/;
+    const cvcRegex = /^[0-9]{3}$/; // točno 3 številke
     if (!cvcRegex.test(cvcVal)) {
       setInvalid(cardCvc);
     }
@@ -92,7 +93,7 @@ function validateCheckoutForm() {
   return valid;
 }
 
-// ====== GLAVNA CHECKOUT LOGIKA ======
+// CHECKOUT LOGIKA
 document.addEventListener('DOMContentLoaded', () => {
   const itemsContainer = document.getElementById('checkout-items');
   const totalElement = document.getElementById('checkout-total');
@@ -102,102 +103,150 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const cardNumberInput = document.getElementById('card_number');
   const cardExpiryInput = document.getElementById('card_expiry');
+  const cardCvcInput = document.getElementById('card_cvc');
 
   // toggle card fields glede na način plačila
   function toggleCardFields() {
+    if (!cardFields) return;
     if (paymentMethod.value === 'card') {
       cardFields.style.display = 'block';
     } else {
       cardFields.style.display = 'none';
     }
   }
-  toggleCardFields();
-  paymentMethod.addEventListener('change', toggleCardFields);
-
-  // render izdelkov iz košarice
-  const cart = getCart();
-
-  if (cart.length === 0) {
-    itemsContainer.innerHTML = '<p>Košarica je prazna.</p>';
-    totalElement.textContent = '0.00 €';
-    placeOrderBtn.disabled = true;
-    return;
+  if (paymentMethod) {
+    toggleCardFields();
+    paymentMethod.addEventListener('change', toggleCardFields);
   }
 
-  itemsContainer.innerHTML = '';
+  // FORM ŠTEVILKE KARTICE
+  if (cardNumberInput) {
+    const formatCardNumber = () => {
+      let value = cardNumberInput.value;
+
+      // samo številke
+      value = value.replace(/\D/g, '');
+
+      // max 16
+      value = value.slice(0, 16);
+
+      // presledek na vsake 4
+      const groups = value.match(/.{1,4}/g);
+      cardNumberInput.value = groups ? groups.join(' ') : '';
+    };
+
+    cardNumberInput.addEventListener('input', formatCardNumber);
+    cardNumberInput.addEventListener('blur', formatCardNumber);
+  }
+
+  // FORM DATUMA KARTICE (MM/YY)
+  if (cardExpiryInput) {
+    const formatExpiry = () => {
+      let value = cardExpiryInput.value;
+
+      // samo številke
+      value = value.replace(/\D/g, '');
+
+      // max 4 številke (MMYY)
+      value = value.slice(0, 4);
+
+      // vstavi /
+      if (value.length >= 3) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+      }
+
+      cardExpiryInput.value = value;
+    };
+
+    cardExpiryInput.addEventListener('input', formatExpiry);
+    cardExpiryInput.addEventListener('blur', formatExpiry);
+  }
+
+  // FORM CVV (3 ŠTEVILKE)
+  if (cardCvcInput) {
+    const formatCvc = () => {
+      let value = cardCvcInput.value;
+
+      // samo številke
+      value = value.replace(/\D/g, '');
+
+      // max 3
+      value = value.slice(0, 3);
+
+      cardCvcInput.value = value;
+    };
+
+    cardCvcInput.addEventListener('input', formatCvc);
+    cardCvcInput.addEventListener('blur', formatCvc);
+  }
+
+  // render/naloži izdelkov iz košarice
+  let cart = [];
+  try {
+    cart = getCart() || [];
+  } catch (e) {
+    cart = [];
+  }
+
   let total = 0;
+  if (itemsContainer) {
+    itemsContainer.innerHTML = '';
+  }
 
-  cart.forEach((item) => {
-    const product = getProductById(item.id);
-    if (!product) return;
+  if (!cart.length) {
+    if (itemsContainer) {
+      itemsContainer.innerHTML = '<p>Košarica je prazna.</p>';
+    }
+    if (totalElement) {
+      totalElement.textContent = '0.00 €';
+    }
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = true;
+    }
+  } else {
+    if (placeOrderBtn) {
+      placeOrderBtn.disabled = false;
+    }
 
-    const price = Number(product.price);
-    const lineTotal = price * item.quantity;
-    total += lineTotal;
+    cart.forEach((item) => {
+      const product = getProductById(item.id);
+      if (!product) return;
 
-    itemsContainer.innerHTML += `
-      <div class="d-flex justify-content-between border-bottom py-2">
-        <div>
-          <strong>${product.name}</strong>
-          <div class="text-muted small">
-            ${item.quantity} × ${price.toFixed(2)} €
+      const price = Number(product.price);
+      const lineTotal = price * item.quantity;
+      total += lineTotal;
+
+      if (itemsContainer) {
+        itemsContainer.innerHTML += `
+          <div class="d-flex justify-content-between border-bottom py-2">
+            <div>
+              <strong>${product.name}</strong>
+              <div class="text-muted small">
+                ${item.quantity} × ${price.toFixed(2)} €
+              </div>
+            </div>
+            <div class="fw-semibold">${lineTotal.toFixed(2)} €</div>
           </div>
-        </div>
-        <div class="fw-semibold">${lineTotal.toFixed(2)} €</div>
-      </div>
-    `;
-  });
+        `;
+      }
+    });
 
-  totalElement.textContent = total.toFixed(2) + ' €';
+    if (totalElement) {
+      totalElement.textContent = total.toFixed(2) + ' €';
+    }
+  }
 
   // klik na Zaključi nakup
-  placeOrderBtn.addEventListener('click', () => {
-    if (!validateCheckoutForm()) return;
+  if (placeOrderBtn) {
+    placeOrderBtn.addEventListener('click', () => {
+      if (!validateCheckoutForm()) return;
 
-    // demo "oddaja"
-    localStorage.removeItem('cart_items');
-    updateCartCount();
-    window.location.href = 'zakljucek.html';
-  });
-
-  // ===== FORMATIRANJE ŠTEVILKE KARTICE =====
-  cardNumberInput.addEventListener('input', () => {
-    let value = cardNumberInput.value;
-
-    // samo številke
-    value = value.replace(/\D/g, '');
-
-    // max 16
-    value = value.substring(0, 16);
-
-    // presledek na vsake 4
-    value = value.replace(/(.{4})/g, '$1 ').trim();
-
-    cardNumberInput.value = value;
-  });
-
-  // ===== FORMATIRANJE DATUMA KARTICE (MM/YY) =====
-  cardExpiryInput.addEventListener('input', () => {
-    let value = cardExpiryInput.value;
-
-    // samo številke
-    value = value.replace(/\D/g, '');
-
-    // max 4 številke (MMYY)
-    value = value.substring(0, 4);
-
-    // vstavi /
-    if (value.length >= 3) {
-      value = value.substring(0, 2) + '/' + value.substring(2);
-    }
-
-    cardExpiryInput.value = value;
-  });
-
-  // ne dovoli več kot 5 znakov
-  cardExpiryInput.addEventListener('keypress', (e) => {
-    if (cardExpiryInput.value.length >= 5) {
-      e.preventDefault();
-    }
-  });
+      // demo "oddaja"
+      localStorage.removeItem('cart_items');
+      if (typeof updateCartCount === 'function') {
+        updateCartCount();
+      }
+      window.location.href = 'zakljucek.html';
+    });
+  }
 });
